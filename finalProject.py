@@ -18,6 +18,10 @@ def getRest(id):
         if int(rest['id']) == id:
             return rest
 
+def getMenuItem(id):
+    for item in items:
+        if int(item['id']) == id:
+            return item
 # END Temp code, for templates basic test
 
 @app.route('/')
@@ -32,7 +36,6 @@ def createRestaurant():
 @app.route('/restaurants/<int:restaurant_id>/edit')
 def editRestaurant(restaurant_id):
     restaurant = getRest(restaurant_id)
-    print restaurant
     return render_template('editrestaurant.html', restaurant=restaurant)
 
 @app.route('/restaurants/<int:restaurant_id>/delete')
@@ -42,19 +45,22 @@ def deleteRestaurant(restaurant_id):
 
 @app.route('/restaurants/<int:restaurant_id>/menu')
 def showRestaurant(restaurant_id):
-    return "page to show a restaurant!"
+    restaurant = getRest(restaurant_id)
+    return render_template('menu.html', restaurant=restaurant)
 
 @app.route('/restaurants/<int:restaurant_id>/menu/new/', methods = ['GET', 'POST'])
 def newMenuItem(restaurant_id):
-    return "page to create a new menu item!"
+    return render_template('newmenuitem.html')
 
 @app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/edit', methods = ['GET', 'POST'])
 def editMenuItem(restaurant_id, menu_item_id):
-    return "page to edit a menu item!"
+    menu_item = getMenuItem(menu_item_id)
+    return render_template('editmenuitem.html', menu_item=menu_item)
 
 @app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/delete', methods=["GET", "POST"])
 def deleteMenuItem(restaurant_id, menu_item_id):
-    return "page to delete a menu item!"
+    menu_item = getMenuItem(menu_item_id)
+    return render_template('deletemenuitem.html', menu_item=menu_item)
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
