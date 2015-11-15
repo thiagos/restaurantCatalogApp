@@ -1,5 +1,21 @@
 <html>
 <body>
-	<h2>Welcome to restaurant {{ restaurant.name }}</h2>
+	<h2>::Restaurant {{ restaurant.name }} menu::</h2>
+	<div class='flash'>
+		{% with messages = get_flashed_messages() %}
+		    {% if messages %}
+		    <ul>
+		    {% for message in messages %}
+		    	<li><strong>{{ message }}</strong></li>
+		    {% endfor %}
+		    </ul>
+		    {% endif %}
+		{% endwith %}
+	</div>
+	{% for i in menu_items %}
+    <span class='name'><p>{{ i.name }}</p></span>
+    <span class='price'><p>{{ i.price }}</p></span>
+    <div class='description'><p> {{i.description}} </p></div><br>
+	{% endfor %}
 </body>
-</html>
+</html> 
