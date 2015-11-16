@@ -1,8 +1,27 @@
-from flask import Flask, render_template, url_for, redirect, request, flash
+from flask import Flask, render_template, url_for, redirect, request, flash, jsonify
 import rest_crud
 
 app = Flask(__name__)
 
+# JSON API routes
+@app.route('/restaurants/JSON')
+def allRestaurantsJSON():
+    all_rests = rest_crud.showRestaurants()
+    return jsonify(Restaurants=[rest.serialize for rest in all_rests])
+
+
+@app.route('/restaurants/<int:restaurant_id>/menu/JSON')
+def getRestaurantJSON(restaurant_id):
+    all_items = rest_crud.getRestaurantItems(restaurant_id)
+    return jsonify(MenuItems=[item.serialize for item in all_items])
+
+
+@app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/JSON')
+def getMenuItemJSON(restaurant_id, menu_item_id):
+    menu_item = rest_crud.getMenuItem(menu_item_id)
+    return jsonify(MenuItem=menu_item.serialize)
+
+# navigation routes
 @app.route('/')
 @app.route('/restaurants/')
 def showRestaurants():
@@ -24,7 +43,8 @@ def editRestaurant(restaurant_id):
     if request.method == 'GET':
         restaurant = rest_crud.getRestaurant(restaurant_id)
         menu_items = rest_crud.getRestaurantItems(restaurant_id)
-        return render_template('editrestaurant.html', restaurant=restaurant, menu_items=menu_items)
+        return render_template('editrestaurant.html', restaurant=restaurant, 
+                                                      menu_items=menu_items)
     else:
         # edit on this level only for restaurant name
         # menu items edits are handled by editMenuItem function
@@ -58,7 +78,8 @@ def newMenuItem(restaurant_id):
         flash("New item " + menu_item.name + " created!")
         return redirect(url_for('editRestaurant', restaurant_id=restaurant_id))
 
-@app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/edit', methods = ['GET', 'POST'])
+@app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/edit', 
+               methods = ['GET', 'POST'])
 def editMenuItem(restaurant_id, menu_item_id):
     menu_item = rest_crud.getMenuItem(menu_item_id)
     if request.method == 'GET':

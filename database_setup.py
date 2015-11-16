@@ -14,6 +14,13 @@ class Restaurant(Base):
     id = Column(Integer, primary_key = True, autoincrement = True)
     menu_items = relationship("MenuItem", backref='restaurant', cascade='all, delete-orphan')
 
+    @property
+    def serialize(self):
+        # Returns object data in easily serializeable format
+        return {
+            'name' : self.name, 
+            'id' : self.id 
+        }
 
 class MenuItem(Base):
 
