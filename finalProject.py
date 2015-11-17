@@ -34,14 +34,14 @@ def createRestaurant():
         return render_template('newrestaurant.html')
     else:
         newRestaurant = rest_crud.newRestaurant(request.form['rest_name'])
-        flash("new restaurant created!")
+        flash("New Restaurant Created")
         return redirect(url_for('showRestaurants'))
 
 
 @app.route('/restaurants/<int:restaurant_id>/edit', methods=['GET', 'POST'])
 def editRestaurant(restaurant_id):
+    restaurant = rest_crud.getRestaurant(restaurant_id)
     if request.method == 'GET':
-        restaurant = rest_crud.getRestaurant(restaurant_id)
         menu_items = rest_crud.getRestaurantItems(restaurant_id)
         return render_template('editrestaurant.html', restaurant=restaurant, 
                                                       menu_items=menu_items)
@@ -49,8 +49,8 @@ def editRestaurant(restaurant_id):
         # edit on this level only for restaurant name
         # menu items edits are handled by editMenuItem function
         rest_crud.editRestaurant(restaurant_id, request.form['rest_name'])
-        flash("Restaurant updated!")
-        return redirect(url_for('editRestaurant', restaurant_id=restaurant_id))
+        flash("Restaurant " + restaurant.name + " Successfully Edited")
+        return redirect(url_for('showRestaurants'))
 
 @app.route('/restaurants/<int:restaurant_id>/delete', methods=['GET', 'POST'])
 def deleteRestaurant(restaurant_id):
@@ -59,7 +59,7 @@ def deleteRestaurant(restaurant_id):
         return render_template('deleterestaurant.html', restaurant=restaurant)
     else:
         rest_crud.deleteRestaurant(restaurant_id)
-        flash('Restaurant ' + restaurant.name + ' deleted!')
+        flash('Restaurant ' + restaurant.name + ' Successfully Deleted')
         return redirect(url_for('showRestaurants'))
 
 @app.route('/restaurants/<int:restaurant_id>/menu')
@@ -74,8 +74,12 @@ def newMenuItem(restaurant_id):
         restaurant = rest_crud.getRestaurant(restaurant_id)
         return render_template('newmenuitem.html', restaurant=restaurant)
     else:
-        menu_item = rest_crud.newMenuItem(request.form['menu_item_name'], restaurant_id)
-        flash("New item " + menu_item.name + " created!")
+        menu_item = rest_crud.newMenuItem(name=request.form['name'],
+                               description=request.form['description'],
+                               course=request.form['course'],
+                               price=request.form['price'],
+                               restaurant_id=restaurant_id)
+        flash("New Menu Item " + menu_item.name + " Created")
         return redirect(url_for('editRestaurant', restaurant_id=restaurant_id))
 
 @app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/edit', 
@@ -85,14 +89,12 @@ def editMenuItem(restaurant_id, menu_item_id):
     if request.method == 'GET':
         return render_template('editmenuitem.html', restaurant_id=restaurant_id, item=menu_item)
     else:
-        print "got here!"
         rest_crud.editMenuItem(menu_item_id=menu_item_id, 
                                name=request.form['name'],
                                description=request.form['description'],
                                course=request.form['course'],
                                price=request.form['price'])
-        flash("Item " + request.form['name'] + " updated!")
-        print "here too!"
+        flash("Menu Item " + request.form['name'] + " Successfully Edited")
         return redirect(url_for('editRestaurant', restaurant_id=restaurant_id))
 
 
@@ -103,7 +105,7 @@ def deleteMenuItem(restaurant_id, menu_item_id):
         return render_template('deletemenuitem.html', menu_item=menu_item)
     else:
         rest_crud.deleteMenuItem(menu_item_id)
-        flash("Item " + menu_item.name + " deleted!")
+        flash("Menu Item " + menu_item.name + " Successfully Deleted")
         return redirect(url_for('editRestaurant', restaurant_id=restaurant_id))
 
 if __name__ == '__main__':
