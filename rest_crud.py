@@ -17,6 +17,8 @@ def newRestaurant(a_name):
 
 def editRestaurant(a_id, new_name):
     cur_restaurant = getRestaurant(a_id)
+    if not new_name:
+    	return
     cur_restaurant.name = new_name
     session.add(cur_restaurant)
     session.commit()

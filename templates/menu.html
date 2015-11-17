@@ -1,6 +1,10 @@
 <html>
+    <head>
+	    <link rel='stylesheet' type='text/css' href='{{ url_for('static', filename='styles.css')}}?q=16'>
+	</head>
 <body>
-	<h2>::Restaurant {{ restaurant.name }} menu::</h2>
+	<div class='pane' >
+	<div class='header'><h2>::{{ restaurant.name }} Menu::</h2></div>	
 	<div class='flash'>
 		{% with messages = get_flashed_messages() %}
 		    {% if messages %}
@@ -13,9 +17,10 @@
 		{% endwith %}
 	</div>
 	{% for i in menu_items %}
-    <span class='name'><p>{{ i.name }}</p></span>
-    <span class='price'><p>{{ i.price }}</p></span>
+    <div class='name'><p>{{ i.name }}</p></div>
+    <div class='price'><p>{{ i.price }}</p></div>
     <div class='description'><p> {{i.description}} </p></div><br>
 	{% endfor %}
+    </div>
 </body>
 </html> 

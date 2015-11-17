@@ -1,9 +1,15 @@
 <html>
+    <head>
+	    <link rel='stylesheet' type='text/css' href='{{ url_for('static', filename='styles.css')}}?q=16'>
+	</head>
 <body>
+	<div class='pane' >
 	<h2> Create new restaurant:</h2>
 	<form action='{{ url_for('createRestaurant')}}' method='post'>
 		<input name='rest_name' type='text'>
 		<input type='submit' value='create'> 
 	</form>
+	<a href={{ url_for('showRestaurants')}}>Back to all Restaurants</a>
+</div>
 </body>
 </html>

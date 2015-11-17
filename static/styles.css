@@ -1,0 +1,17 @@
+body            { font-family: 'Verdana'; font-color: #000; background-color: #333333; background-image: url("/static/background.jpg");}
+
+a { color:#000; font-size: .75em;}
+a:hover {color:red;}
+
+.pane {position:absolute; left: 25%; border: 2px solid;
+    border-radius: 25px; padding: 5px; margin: 5px; border-color: #999999; background-color: #DDDDDD; width: 50%;}
+.restname a { text-decoration: none; font-size: 1.2em;}
+
+.header         {left:50%; text-align: center; font-size: 1em;}
+.name {width:50%;display: inline-block; float: left;}
+.description { font-size: 0.8em;}
+.price {text-align: right; width:50%; float: right; }
+.editdeletepane{}
+
+.flash          { background: #cee5F5; }
+.error          { background: #f0d6d6; padding: 0.5em; }

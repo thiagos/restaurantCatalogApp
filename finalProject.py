@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, redirect, request, flash, jsonify
-import rest_crud
+import rest_crud, sys
 
 app = Flask(__name__)
 
@@ -102,7 +102,7 @@ def editMenuItem(restaurant_id, menu_item_id):
 def deleteMenuItem(restaurant_id, menu_item_id):
     menu_item = rest_crud.getMenuItem(menu_item_id)
     if request.method == 'GET':
-        return render_template('deletemenuitem.html', menu_item=menu_item)
+        return render_template('deletemenuitem.html', restaurant_id=restaurant_id, menu_item=menu_item)
     else:
         rest_crud.deleteMenuItem(menu_item_id)
         flash("Menu Item " + menu_item.name + " Successfully Deleted")
