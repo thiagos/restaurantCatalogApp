@@ -1,4 +1,5 @@
 from flask import Flask, render_template, url_for, redirect, request, flash, jsonify
+from collections import OrderedDict
 import rest_crud, sys
 
 app = Flask(__name__)
@@ -66,7 +67,12 @@ def deleteRestaurant(restaurant_id):
 def showRestaurant(restaurant_id):
     restaurant = rest_crud.getRestaurant(restaurant_id)
     menu_items = rest_crud.getRestaurantItems(restaurant_id)
-    return render_template('menu.html', restaurant=restaurant, menu_items=menu_items)
+    sections= OrderedDict()
+    sections['Appetizers'] = [item for item in menu_items if item.course == "Appetizer"]
+    sections['Entrees'] = [item for item in menu_items if item.course == "Entree"]
+    sections['Desserts'] = [item for item in menu_items if item.course == "Dessert"]
+    sections['Beverages'] = [item for item in menu_items if item.course == "Beverage"]
+    return render_template('menu.html', restaurant=restaurant, sections=sections)
 
 @app.route('/restaurants/<int:restaurant_id>/menu/new/', methods = ['GET', 'POST'])
 def newMenuItem(restaurant_id):

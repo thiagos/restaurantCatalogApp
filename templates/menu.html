@@ -4,7 +4,7 @@
 	</head>
 <body>
 	<div class='pane' >
-	<div class='header'><h2>::{{ restaurant.name }} Menu::</h2></div>	
+	<div class='header'><h2>{{ restaurant.name }} Menu</h2></div>
 	<div class='flash'>
 		{% with messages = get_flashed_messages() %}
 		    {% if messages %}
@@ -16,10 +16,15 @@
 		    {% endif %}
 		{% endwith %}
 	</div>
-	{% for i in menu_items %}
-    <div class='name'><p>{{ i.name }}</p></div>
-    <div class='price'><p>{{ i.price }}</p></div>
-    <div class='description'><p> {{i.description}} </p></div><br>
+	{% for section in sections.keys() %}
+		{% if sections[section] %}
+		<div class='menusection'>::{{ section }}::</div>
+			{% for i in sections[section] %}
+			<div class='name'><p>{{ i.name }}</p></div>
+			<div class='price'><p>{{ i.price }}</p></div>
+			<div class='description'><p> {{i.description}} </p></div><br>
+			{% endfor %}
+		{% endif %}
 	{% endfor %}
     </div>
 </body>
