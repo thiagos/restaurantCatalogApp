@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, redirect, request, flash, jsonify
 from collections import OrderedDict
-import rest_crud, sys
+import rest_crud
 
 app = Flask(__name__)
 
@@ -44,8 +44,13 @@ def editRestaurant(restaurant_id):
     restaurant = rest_crud.getRestaurant(restaurant_id)
     if request.method == 'GET':
         menu_items = rest_crud.getRestaurantItems(restaurant_id)
+        sections= OrderedDict()
+        sections['Appetizers'] = [item for item in menu_items if item.course == "Appetizer"]
+        sections['Entrees'] = [item for item in menu_items if item.course == "Entree"]
+        sections['Desserts'] = [item for item in menu_items if item.course == "Dessert"]
+        sections['Beverages'] = [item for item in menu_items if item.course == "Beverage"]
         return render_template('editrestaurant.html', restaurant=restaurant, 
-                                                      menu_items=menu_items)
+                                                      sections=sections)
     else:
         # edit on this level only for restaurant name
         # menu items edits are handled by editMenuItem function
