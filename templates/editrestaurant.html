@@ -5,6 +5,7 @@
 <body>
 	<div class='pane' >
 	<div class='header'><h2>Edit restaurant {{ restaurant.name }}:</h2></div>
+	<h4><i>Proudly owned by {{ creator.name }}</i></h4>
 
 	<div class='flash'>
 		{% with messages = get_flashed_messages() %}

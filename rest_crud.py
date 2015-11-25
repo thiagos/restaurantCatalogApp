@@ -10,8 +10,9 @@ session = DBSession()
 def showRestaurants():
     return session.query(Restaurant).all()
 
-def newRestaurant(a_name):
-    myRestaurant = Restaurant(name = a_name)
+def newRestaurant(a_name, a_user_id):
+    myRestaurant = Restaurant(name = a_name,
+                              user_id = a_user_id)
     session.add(myRestaurant)
     session.commit()
 
@@ -28,12 +29,13 @@ def deleteRestaurant(a_id):
     session.delete(cur_restaurant)
     session.commit()
 
-def newMenuItem(name, description, price, course, restaurant_id):
+def newMenuItem(name, description, price, course, restaurant_id, user_id):
     myItem = MenuItem(name = name,
                       description = description,
                       price = price,
                       course = course,
-                      restaurant_id = restaurant_id)
+                      restaurant_id = restaurant_id,
+                      user_id = user_id)
     session.add(myItem)
     session.commit()
     return myItem

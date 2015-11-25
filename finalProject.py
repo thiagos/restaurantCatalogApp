@@ -34,6 +34,12 @@ def getMenuItemJSON(restaurant_id, menu_item_id):
     menu_item = rest_crud.getMenuItem(menu_item_id)
     return jsonify(MenuItem=menu_item.serialize)
 
+# TESTING PURPOSES ONLY, should not show users info openly :)
+@app.route('/users/<int:user_id>/JSON')
+def getUserJSON(user_id):
+    user = rest_crud.getUserById(user_id)
+    return jsonify(User=user.serialize)
+
 # Login related routes
 @app.route('/login')
 def showLogin():
@@ -154,6 +160,7 @@ def gdisconnect():
         del login_session['username']
         del login_session['email']
         del login_session['picture']
+        del login_session['user_id']
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
@@ -167,7 +174,10 @@ def gdisconnect():
 @app.route('/restaurants/')
 def showRestaurants():
     restaurants = rest_crud.showRestaurants()
-    return render_template('restaurants.html', restaurants=restaurants)
+    if 'username' not in login_session:
+        return render_template('publicrestaurants.html', restaurants=restaurants)
+    else:
+        return render_template('restaurants.html', restaurants=restaurants)
 
 @app.route('/restaurants/new', methods=['GET', 'POST'])
 def createRestaurant():
@@ -176,7 +186,7 @@ def createRestaurant():
     if request.method == 'GET':
         return render_template('newrestaurant.html')
     else:
-        newRestaurant = rest_crud.newRestaurant(request.form['rest_name'])
+        newRestaurant = rest_crud.newRestaurant(request.form['rest_name'], login_session['user_id'])
         flash("New Restaurant Created")
         return redirect(url_for('showRestaurants'))
 
@@ -186,6 +196,8 @@ def editRestaurant(restaurant_id):
     if 'username' not in login_session:
         return redirect(url_for('showLogin'))
     restaurant = rest_crud.getRestaurant(restaurant_id)
+    if login_session['user_id'] != restaurant.user_id:
+        return "you are not allowed to edit this restaurant!"
     if request.method == 'GET':
         menu_items = rest_crud.getRestaurantItems(restaurant_id)
         sections= OrderedDict()
@@ -207,6 +219,8 @@ def deleteRestaurant(restaurant_id):
     if 'username' not in login_session:
         return redirect(url_for('showLogin'))
     restaurant = rest_crud.getRestaurant(restaurant_id)
+    if login_session['user_id'] != restaurant.user_id:
+        return "you are not allowed to delete this restaurant!"
     if request.method == 'GET':
         return render_template('deleterestaurant.html', restaurant=restaurant)
     else:
@@ -217,27 +231,39 @@ def deleteRestaurant(restaurant_id):
 @app.route('/restaurants/<int:restaurant_id>/menu')
 def showRestaurant(restaurant_id):
     restaurant = rest_crud.getRestaurant(restaurant_id)
+    creator = rest_crud.getUserById(restaurant.user_id)
     menu_items = rest_crud.getRestaurantItems(restaurant_id)
     sections= OrderedDict()
     sections['Appetizers'] = [item for item in menu_items if item.course == "Appetizer"]
     sections['Entrees'] = [item for item in menu_items if item.course == "Entree"]
     sections['Desserts'] = [item for item in menu_items if item.course == "Dessert"]
     sections['Beverages'] = [item for item in menu_items if item.course == "Beverage"]
-    return render_template('menu.html', restaurant=restaurant, sections=sections)
+    if 'username' not in login_session or login_session['user_id'] != restaurant.user_id:
+        print "user not logged in"
+        return render_template('menu.html', restaurant=restaurant,
+                                            sections=sections,
+                                            creator=creator)
+    else:
+        return render_template('editRestaurant.html', restaurant=restaurant,
+                                                      sections=sections,
+                                                      creator=creator)
 
 @app.route('/restaurants/<int:restaurant_id>/menu/new/', methods = ['GET', 'POST'])
 def newMenuItem(restaurant_id):
     if 'username' not in login_session:
         return redirect(url_for('showLogin'))
+    restaurant = rest_crud.getRestaurant(restaurant_id)
+    if login_session['user_id'] != restaurant.user_id:
+        return "you are not allowed to add an item to this restaurant!"
     if request.method == 'GET':
-        restaurant = rest_crud.getRestaurant(restaurant_id)
         return render_template('newmenuitem.html', restaurant=restaurant)
     else:
         menu_item = rest_crud.newMenuItem(name=request.form['name'],
                                description=request.form['description'],
                                course=request.form['course'],
                                price=request.form['price'],
-                               restaurant_id=restaurant_id)
+                               restaurant_id=restaurant_id,
+                               user_id=login_session['user_id'])
         flash("New Menu Item " + menu_item.name + " Created")
         return redirect(url_for('editRestaurant', restaurant_id=restaurant_id))
 
@@ -246,6 +272,9 @@ def newMenuItem(restaurant_id):
 def editMenuItem(restaurant_id, menu_item_id):
     if 'username' not in login_session:
         return redirect(url_for('showLogin'))
+    restaurant = rest_crud.getRestaurant(restaurant_id)
+    if login_session['user_id'] != restaurant.user_id:
+        return "you are not allowed to edit an item from this restaurant!"
     menu_item = rest_crud.getMenuItem(menu_item_id)
     if request.method == 'GET':
         return render_template('editmenuitem.html', restaurant_id=restaurant_id, item=menu_item)
@@ -263,6 +292,9 @@ def editMenuItem(restaurant_id, menu_item_id):
 def deleteMenuItem(restaurant_id, menu_item_id):
     if 'username' not in login_session:
         return redirect(url_for('showLogin'))
+    restaurant = rest_crud.getRestaurant(restaurant_id)
+    if login_session['user_id'] != restaurant.user_id:
+        return "you are not allowed to delete an item from this restaurant!"
     menu_item = rest_crud.getMenuItem(menu_item_id)
     if request.method == 'GET':
         return render_template('deletemenuitem.html', restaurant_id=restaurant_id, menu_item=menu_item)

@@ -1,6 +1,6 @@
 <html>
     <head>
-	    <link rel='stylesheet' type='text/css' href='{{ url_for('static', filename='styles.css')}}?q=22'>
+	    <link rel='stylesheet' type='text/css' href='{{ url_for('static', filename='styles.css')}}'>
 	</head>
 <body>
 	<div class='pane' >
@@ -17,7 +17,7 @@
 		{% endwith %}
 	</div>
 
-	<a href='{{ url_for('createRestaurant') }}'>Create new restaurant</a><br><br>
+	<a href='{{ url_for('showLogin') }}'>Click here to login</a><br><br>
 
 	
     {% for restaurant in restaurants %}
