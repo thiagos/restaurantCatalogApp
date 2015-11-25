@@ -112,6 +112,17 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    local_user = rest_crud.getUserByEmail(login_session['email'])
+    if local_user:
+        print "user already exists!"
+        login_session['user_id'] = local_user.id
+    else:
+        print "new user being created!"
+        new_user = rest_crud.newUser(login_session)
+        login_session['user_id'] = new_user.id
+
+    print "current used id = " + str(login_session['user_id'])
+
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']

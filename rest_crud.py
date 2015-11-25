@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Restaurant, MenuItem
+from database_setup import Base, Restaurant, MenuItem, User
 
-engine = create_engine('sqlite:///restaurantmenu.db')
+engine = create_engine('sqlite:///restaurantmenuwithusers.db')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind = engine)
 session = DBSession()
@@ -66,3 +66,26 @@ def getMenuItem(menu_item_id):
 
 def getRestaurant(a_id):
     return session.query(Restaurant).filter_by(id = a_id).one()
+
+def newUser(login_session):
+    my_user = User(name = login_session['username'],
+                  email = login_session['email'],
+                  picture = login_session['picture'])
+    session.add(my_user)
+    session.commit()
+    # Get from DB again, so we have access to the user id
+    retrieved_user = getUserByEmail(login_session['email'])
+    return retrieved_user
+
+def getUserByEmail(email):
+    myUser = session.query(User).filter_by(email=email).first()
+    return myUser
+
+def getUserById(user_id):
+    myUser = session.query(User).filter_by(id=user_id).first()
+    return myUser
+
+def deleteUser(user_id):
+    my_user = session.query(User).filter_by(id=user_id).first()
+    session.delete(my_user)
+    session.commit()
