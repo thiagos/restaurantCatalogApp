@@ -342,7 +342,7 @@ def newMenuItem(restaurant_id):
                                restaurant_id=restaurant_id,
                                user_id=login_session['user_id'])
         flash("New Menu Item " + menu_item.name + " Created")
-        return redirect(url_for('editRestaurant', restaurant_id=restaurant_id))
+        return redirect(url_for('showRestaurant', restaurant_id=restaurant_id))
 
 @app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/edit', 
                methods = ['GET', 'POST'])
@@ -362,7 +362,7 @@ def editMenuItem(restaurant_id, menu_item_id):
                                course=request.form['course'],
                                price=request.form['price'])
         flash("Menu Item " + request.form['name'] + " Successfully Edited")
-        return redirect(url_for('editRestaurant', restaurant_id=restaurant_id))
+        return redirect(url_for('showRestaurant', restaurant_id=restaurant_id))
 
 
 @app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_item_id>/delete', methods=["GET", "POST"])
@@ -378,7 +378,7 @@ def deleteMenuItem(restaurant_id, menu_item_id):
     else:
         rest_crud.deleteMenuItem(menu_item_id)
         flash("Menu Item " + menu_item.name + " Successfully Deleted")
-        return redirect(url_for('editRestaurant', restaurant_id=restaurant_id))
+        return redirect(url_for('showRestaurant', restaurant_id=restaurant_id))
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'

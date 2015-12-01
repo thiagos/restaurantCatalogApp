@@ -19,9 +19,9 @@
 		{% endwith %}
 	</div>
 
-	Restaurant name: <form action='#' method='post'>
+	Restaurant name: <form action='{{ url_for('editRestaurant', restaurant_id=restaurant.id) }}' method='post'>
 		<input type='text' name='rest_name' placeholder='{{ restaurant.name }}'>
-		<input type='hidden' value='{{ restaurant['id'] }}'>
+		<input type='hidden' value='{{ restaurant.id }}'>
 		<input type='submit' value='edit'>
 	</form>
 
@@ -46,6 +46,10 @@
 
 	</ul>
 	{% endfor %}
+	<br><br>Click here to delete this restaurant
+	<form action='{{ url_for('deleteRestaurant', restaurant_id=restaurant.id)}}' method='post'>
+	<input type='submit' value='DELETE'>
+	</form>
 	<br><br><a href='{{ url_for('showRestaurants')}}'>Back to all Restaurants</a>
 	</div>
 </body>
