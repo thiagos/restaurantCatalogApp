@@ -26,3 +26,9 @@ python lotsofmenuswithuser.py
 python finalProject.py
 
 And visit the application at http://localhost:5000
+
+Also, some JSON APIs are available, as below:
+
+- get all restaurants: /restaurants/JSON
+- get all items from a restaurant: /restaurants/<restaurant_id>/menu/JSON
+- get a specific item: /restaurants/<restaurant_id>/menu/<menu_item_id>/JSON
