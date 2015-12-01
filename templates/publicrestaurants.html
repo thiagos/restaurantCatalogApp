@@ -4,6 +4,7 @@
 	</head>
 <body>
 	<div class='pane' >
+	{% include "header.html" %}
 	<div class='header'><h2>Restaurants List</h2></div>
 	<div class='flash'>
 		{% with messages = get_flashed_messages() %}
@@ -17,9 +18,6 @@
 		{% endwith %}
 	</div>
 
-	<a href='{{ url_for('showLogin') }}'>Click here to login</a><br><br>
-
-	
     {% for restaurant in restaurants %}
     <ul>
         <li class='restname'><a href='{{ url_for('showRestaurant', restaurant_id=restaurant.id) }}'>{{ restaurant.name }}</a></li>

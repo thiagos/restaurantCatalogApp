@@ -1,9 +1,10 @@
 <html>
     <head>
-	    <link rel='stylesheet' type='text/css' href='{{ url_for('static', filename='styles.css')}}?q=22'>
+	    <link rel='stylesheet' type='text/css' href='{{ url_for('static', filename='styles.css')}}?q=25'>
 	</head>
 <body>
 	<div class='pane' >
+	{% include "header.html" %}
 	<div class='header'><h2>Restaurants List</h2></div>
 	<div class='flash'>
 		{% with messages = get_flashed_messages() %}
@@ -26,5 +27,11 @@
     </ul>
     {% endfor %}
 	</div>
+	<div
+  class="fb-like"
+  data-share="true"
+  data-width="450"
+  data-show-faces="true">
+</div>
 </body>
 </html>
