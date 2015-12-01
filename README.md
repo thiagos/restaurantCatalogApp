@@ -17,7 +17,11 @@ python database_setup.py
 
 python lotsofmenuswithuser.py
 
-3. To start the application, run:
+3. Add your valid google credentials in file client_secrets.json (not adding mine for safety reasons, sorry)
+
+4. Add your valid facebook credentials in file fb_client_secrets.json 
+
+5. To start the application, run:
 
 python finalProject.py
 
