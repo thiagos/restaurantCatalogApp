@@ -30,5 +30,5 @@ And visit the application at http://localhost:5000
 Also, some JSON APIs are available, as below:
 
 - get all restaurants: /restaurants/JSON
-- get all items from a restaurant: /restaurants/<restaurant_id>/menu/JSON
-- get a specific item: /restaurants/<restaurant_id>/menu/<menu_item_id>/JSON
+- get all items from a restaurant: /restaurants/_restaurant\_id_/menu/JSON
+- get a specific item: /restaurants/_restaurant\_id_/menu/_menu\_item\_id_/JSON
