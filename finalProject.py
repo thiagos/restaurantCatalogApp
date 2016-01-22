@@ -321,7 +321,7 @@ def showRestaurant(restaurant_id):
                                             sections=sections,
                                             creator=creator)
     else:
-        return render_template('editRestaurant.html', restaurant=restaurant,
+        return render_template('editrestaurant.html', restaurant=restaurant,
                                                       sections=sections,
                                                       creator=creator)
 
